@@ -1,10 +1,81 @@
-// var djiCommands = {
+var djiCommands = {
 
+    setShippingAddress: function(firstName, lastName, address,
+        address2, city, zipCode, phone, ) {
+        this
+            .setValue('@inputFirstName', firstName)
+            .setValue('@inputLastName', lastName)
+            .setValue('@inputAddress', address)
+            .setValue('@inputAddress2', address2)
+            .setValue('@inputCity', city)
+            .setValue('@inputZipCode', zipCode)
+            .setValue('@inputPhone', phone)
+            .pause(1000)
+            .click('@selectStateWrapper')
+            .pause(1000)
+            .waitForElementVisible('@StateContainer')
+            .pause(1000)
+            .click('@wisconsin')
+            .pause(3000)
+            .click('@buttonSubmitOrder')
+            .pause(1000)
+        return this
+    },
+    selectNewsDroneVersionAndCombo: function() {
+        this
 
-// }
+            .waitForElementPresent('@mavicProducts')
+            .click('@mavicProducts')
+            .pause(1000)
+            .click('@closePrivacyMessage')
+            .waitForElementVisible('@djiMini2', 500)
+            .pause(1000)
+            .click('@djiMini2')
+            .waitForElementVisible('@productContainer')
+            .pause(1000)
+            .click('@closePrivacyMessage')
+            .click('@flyMoreCombo')
+            .pause(1000)
+            .click('@shopNow')
+
+        return this
+
+    },
+    addDjiaCareOneYear: function() {
+        this
+            .waitForElementVisible('@carePage')
+            //add one year 
+            .click('@djiCareRefresh1year')
+            //submite 
+            .click('@AddDjiCareButton')
+        return this
+    },
+
+    closeDialogMessage: function() {
+        this
+            .waitForElementVisible('@dialogMessege')
+            .pause(1000)
+            //continue Dialogbutton
+            .click('@continueDialogButton')
+            .waitForElementVisible('@carePage')
+        return this
+    },
+    checkOutCart: function() {
+        this
+            .click('@viewCartCheckout')
+            .pause(1000)
+            .click('@checkOut')
+            .waitForElementVisible("@loginBox")
+            .click('@loginGuest')
+            .waitForElementVisible("@orderSummary")
+            .pause(1000)
+        return this
+    }
+}
+
 module.exports = {
     url: 'https://store.dji.com/',
-    // commands: [djiCommands],
+    commands: [djiCommands],
     elements: {
 
         logo: 'a[title = "DJI store"]',
@@ -99,9 +170,33 @@ module.exports = {
         orderSummary: {
             selector: '//div[@class="overview-section"]',
             locateStrategy: 'xpath'
+
+        },
+        productTitle: {
+            selector: '(//h2[@class="Header__section-title___c12h9"])[1]',
+            locateStrategy: 'xpath'
+        },
+        StateContainer: {
+            selector: '(//ul[@class="sc-iRbamj dfKJoK"])[1]',
+            locateStrategy: 'xpath'
+
+        },
+        prductVersionName: {
+            selector: '//section[@class="info-section"]',
+            locateStrategy: 'xpath'
+        },
+        mainPageDialogMessage: {
+            selector: '(//div[@class="cc-dialog"])[1]',
+            locateStrategy: 'xpath'
+        },
+        pageFooter: {
+            selector: '//div[@class="styles__www-footer___tpcIj"]',
+            locateStrategy: 'xpath'
+        },
+        wisconsin: {
+            selector: '(//li[@class="sc-Rmtcm eAdDIt"])[55]',
+            locateStrategy: 'xpath'
         }
-
-
         //diferent products '(//div[@class="style__title____iugB"])[2]'
 
     }

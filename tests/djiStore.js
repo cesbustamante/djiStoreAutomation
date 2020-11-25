@@ -1,269 +1,171 @@
-var djiProducts = [
-        'Mavic', 'Osmo',
-        'Phantom', 'Ronin',
-        'RoboMaster', 'DJI FPV',
-        'Inspire', 'Enterprise',
-        'Tello', 'Service'
-    ]
-    // var nnn = [
-    //     'Mavic', 'Osmo',
-    //     'Phantom', 'Ronin',
-    //     'RoboMaster', 'DJI FPV',
-    //     'Inspire', 'Spark',
-    //     'Enterprise', 'Components',
-    //     'Tello', 'Service',
-    // ]
-var djiSearch = [{
-        search: 'Mavic',
-        result: 'Mavic'
-    },
-    {
-        search: 'Service',
-        result: 'DJI Care'
-    },
-    {
-        search: 'osmo Pocket',
-        result: 'Pocket 2'
-    },
-    {
-        search: 'Tello',
-        result: 'Tello'
-    },
-    {
-        search: 'Mavic Air 2',
-        result: 'Mavic Air 2'
-    },
-    {
-        search: 'Battery',
-        result: 'Battery'
-    }
-]
-var seeMore = [{
-        more: 1,
-        res: 'Mavic'
-    },
-    {
-        more: 2,
-        res: 'Osmo'
-    },
-    {
-        more: 3,
-        res: 'Ronin'
-    },
-    {
-        more: 4,
-        res: 'Phantom'
-    },
-    {
-        more: 5,
-        res: 'Inspire'
-    },
-    {
-        more: 6,
-        res: 'Service'
-    }
-]
+var djiSearch = require('../testAssets/djiSearch')
 
-var productVersion = [
-    'DJI Mini 2', 'DJI Pocket 2',
-    'Phantom 4 Pro V2.0', 'DJI RS 2',
-    'RoboMaster S1', 'DJI FPV Fly More Combo (Mode 2)',
-    'Inspire 2', 'Matrice 600 Pro',
-    'Tello'
-]
-var userShippingData = {
-    firstName: 'Carlos',
-    lastName: 'Trata',
-    address: '1145 11th street',
-    address2: 'apt2',
-    city: 'Baraboo',
-    zipCode: '53913',
-    phone: '3003050247'
+var djiFooterLinks = require('../testAssets/djiFooterLinks')
 
-}
-var seeAll = function(browser, seeMore) {
+var djiProducts = require('../testAssets/djiProducts')
+
+var djiProductVersion = require('../testAssets/djiProductVersion')
+
+var djiSeeMore = require('../testAssets/djiSeeMore')
+
+var djiUserShippingData = require('../testAssets/djiUserShippingData')
+
+var seeAll = function(browser, djiSeeMore) {
     browser
+    dji
         .useXpath()
-        .click('(//a[@class="cc-close"])[1]')
-        .waitForElementPresent(`(//a[@class="Header__text-link___18R4E"])[${seeMore.more}]`)
-        .pause(1000)
-        .click(`(//a[@class="Header__text-link___18R4E"])[${seeMore.more}]`)
+        .waitForElementPresent('@mainPageDialogMessage')
+        .click('@closePrivacyMessage')
+        .waitForElementPresent(`(//a[@class="Header__text-link___18R4E"])[${djiSeeMore.more}]`)
+        .pause(2000)
+        .click(`(//a[@class="Header__text-link___18R4E"])[${djiSeeMore.more}]`)
         .waitForElementVisible('(//h2[@class="Header__section-title___c12h9"])[1]')
         .pause(500)
-        .verify.containsText('(//h2[@class="Header__section-title___c12h9"])[1]', `${seeMore.res}`)
+        .verify.containsText('(//h2[@class="Header__section-title___c12h9"])[1]', `${djiSeeMore.res}`)
         .click('@logo')
 
-    .click
 }
+var footerLinksContains = function(browser, djiFooterLinks) {
+    browser
 
+        .moveToElement('@pageFooter', 20, 20)
+        .waitForElementPresent(`(//ul/li/a[@target="_blank"])[${djiFooterLinks.link}]`)
+        .pause(1000)
+        .verify.containsText(`(//ul/li/a[@target="_blank"])[${djiFooterLinks.link}]`, `${djiFooterLinks.Section}`)
 
+}
 var dji = {}
 
 module.exports = {
-        beforeEach: browser => {
-            dji = browser.page.djiPage()
-            dji.resizeWindow(1920, 1080)
+    beforeEach: browser => {
+        dji = browser.page.djiPage()
+        dji.resizeWindow(1920, 1080)
 
-            dji
-                .navigate()
-                .waitForElementPresent('')
-        },
-        after: browser => {
-            browser.end()
-        },
-        // //navigate the icons on from the roof menu and expect to be redirected to the right page
-        // 'Verify the user is able to navigate through icons in the top main page': browser => {
-        //     dji
-        //     console.log(djiProducts.length)
-        //     for (let i = 0, j = 1; i < djiProducts.length, j < 10; i++, j++) {
-        //         dji
-        //             .useXpath()
-        //             .waitForElementPresent(`(//div[@class="style__title____iugB"])[${j}]`)
-        //             .click(`(//div[@class="style__title____iugB"])[${j}]`)
-        //             .waitForElementVisible('//div[@class="style__content___3PFJP"]')
-        //             .verify.containsText('//div[@class="style__content___3PFJP"]', djiProducts[i])
-        //             .useCss()
-        //             .click('@logo')
+        dji
+            .navigate()
+            // .expect.urlContains('store.dji.com')
 
-        //     }
-        // },
-        // //navigate to each of the must popular products ('Mavic', 'Osmo', 'Phantom',
-        // //'Ronin','RoboMaster','DJI FPV','Inspire') and click on the first picture
-        // //on the left (news version of the product tha the companie sell)
-        // //expect to be redirect to the product individual page (with expection of servise page)
-        // 'Verify the user is able to navigate through icons in the top main page': browser => {
-        //     dji
+    },
+    after: browser => {
+        browser.end()
+    },
+    // //navigate the icons on from the roof menu and expect to be redirected to the right page
+    // 'Verify the user is able to navigate through icons on the top main page': browser => {
+    //     dji
+    //         .useXpath()
+    //         .waitForElementPresent('//main[@class="_1SoeU"]')
+    //         .click('//i[@class="_3hG3b _3c0Qz"]')
+    //         .useXpath()
+    //         .waitForElementPresent('@mainPageDialogMessage')
+    //         .click('@closePrivacyMessage')
+    //     dji
+    //     console.log(djiProducts.length)
+    //     for (let i = 0, j = 1; i < djiProducts.length, j < 10; i++, j++) {
+    //         dji
+    //             .useXpath()
+    //             .waitForElementPresent(`(//div[@class="style__title____iugB"])[${j}]`)
+    //             .click(`(//div[@class="style__title____iugB"])[${j}]`)
+    //             .waitForElementVisible('//div[@class="style__content___3PFJP"]')
+    //             .verify.containsText('//div[@class="style__content___3PFJP"]', djiProducts[i])
+    //             .useCss()
+    //             .click('@logo')
 
-        //     console.log(djiProducts.length)
-        //     for (let i = 0, j = 1; i < productVersion.length, j < 7; i++, j++) {
-        //         dji
-        //             .useXpath()
-        //             .waitForElementPresent(`(//div[@class="style__title____iugB"])[${j}]`)
-        //             .click(`(//div[@class="style__title____iugB"])[${j}]`)
-        //             .pause(1000)
-        //             .click('(//a[@class="cc-close"])[1]')
-        //             .waitForElementVisible('//div[@class="style__product-item___X3wEq"]', 500)
-        //             .pause(1000)
-        //             .click('//div[@class="style__product-item___X3wEq"]')
-        //             .waitForElementVisible('//section[@class="info-section"]')
-        //             .verify.containsText('//section[@class="info-section"]', productVersion[i])
-        //             .useCss()
-        //             .click('@logo')
+    //     }
+    // },
+    // //Navigate to each of the most popular products ('Mavic', 'Osmo', 'Phantom','Ronin', ‘RoboMaster', ‘DJI FPV', ‘Inspire') 
+    // //and click on the first picture on the left (news version of the product that the company sells)
+    // //expect to be redirected to the product individual page (with exception of service page)
+    // 'Verify after open products the user is avaible to navigate to the news product version': browser => {
+    //     dji
 
-        //     }
-        // },
-        // 'Search': browser => {
-        //     dji
+    //     console.log(djiProducts.length)
+    //     for (let i = 0, j = 1; i < djiProductVersion.length, j < 7; i++, j++) {
+    //         dji
+    //             .useXpath()
+    //             .waitForElementPresent(`(//div[@class="style__title____iugB"])[${j}]`)
+    //             .click(`(//div[@class="style__title____iugB"])[${j}]`)
+    //             .pause(1000)
+    //             .click('@closePrivacyMessage')
+    //             .waitForElementVisible('@djiMini2', 500)
+    //             .pause(1000)
+    //             .click('@djiMini2')
+    //             .waitForElementVisible('@prductVersionName')
+    //             .verify.containsText('@prductVersionName', djiProductVersion[i])
+    //             .useCss()
+    //             .click('@logo')
+    //     }
+    // },
+    // 'Verify the search feature match the user criteria for the company products': browser => {
+    //     dji
+    //     console.log(djiSearch.length)
+    //     for (let i = 0; i < djiSearch.length; i++) {
+    //         dji
 
-        //     console.log(djiSearch.length)
-        //     for (let i = 0; i < djiSearch.length; i++) {
-        //         dji
+    //             .waitForElementPresent('@searchProductBox')
+    //             .setValue('@searchProductBox', djiSearch[i].search)
+    //             .useXpath()
+    //             .click('//button[@type="submit"]')
+    //             .useCss()
+    //             .waitForElementVisible('@searchResults')
+    //             .pause(1000)
+    //             .verify.containsText('@searchResultContainer', djiSearch[i].result)
+    //             .pause(1000)
+    //             .clearValue('@searchProductBox')
 
-        //             .waitForElementPresent('@searchProductBox')
-        //             .setValue('@searchProductBox', djiSearch[i].search)
-        //             .useXpath()
-        //             .click('//button[@type="submit"]')
-        //             .useCss()
-        //             .waitForElementVisible('@searchResults')
-        //             .pause(1000)
-        //             .verify.containsText('@searchResultContainer', djiSearch[i].result)
-        //             .pause(1000)
-        //             .clearValue('@searchProductBox')
+    //     }
+    // },
 
-        //     }
-        // },
-        //     'see more option main page': browser => {
-        //         seeMore.forEach(test => {
-        //             seeAll(dji, test)
-        //             console.log(test.num)
-        //             console.log(test.res)
-        //         })
+    // 'Verify the "more" links on the maind page redirect the user to the rithg site ': browser => {
+    //     // dji
+    //     //     .useXpath()
+    //     //     .waitForElementPresent('//main[@class="_1SoeU"]')
+    //     //     .click('//i[@class="_3hG3b _3c0Qz"]')
+    //     //     .pause(1000)
+    //     dji
+    //     djiSeeMore.forEach(test => {
+    //         seeAll(dji, test)
+    //         console.log(test.more)
+    //         console.log(test.res)
+    //     })
+    // },
+    // 'Verify footer has 25 links with name tha match the companies footer list ': browser => {
+    //     dji
+    //     // .useXpath()
+    //     // .waitForElementPresent('//main[@class="_1SoeU"]')
+    //     // .click('//i[@class="_3hG3b _3c0Qz"]')
+    //     // .pause(1000)
+    //         .useXpath()
+    //         .waitForElementPresent("@mainPageDialogMessage")
+    //         .click('@closePrivacyMessage')
+    //     dji
+    //     djiFooterLinks.forEach(test => {
+    //         footerLinksContains(dji, test)
+    //         console.log(test.link)
+    //         console.log(test.Section)
+    //     })
+    // },
 
-        //     }
-
-        // }
-        'footer links opening in a new tap': browser => {
-                dji
-                console.log(djiProducts.length)
-                for (let i = 0, j = 1; i < productVersion.length, j < 26; i++, j++) {
-                    dji
-                        .waitForElementPresent(`//ul/li/a[@target="_blank"][${j}]`)
-                        .click('(//a[@class="cc-close"])[1]')
-                        .click(`//ul/li/a[@target="_blank"][${j}]`)
-                    dji
-                        .windowHandles(function(result) {
-                            var handle = result.value[0]
-                            dji
-                                .switchWindow(handle)
-                                .verify.containsText('@searchResultContainer', djiSearch[i].result)
-                                .clore
-                        })
-
-                    //ul/li/a[@target="_blank"]''
-                    // dji
-                    //     .click(` ( //div[@class="Header__btn-group___3EtNx"])[${j}]`)
-                    //     .click('@logo')
-                    // .pause(3000)
-                    // .waitForElementVisible('//div[@class="style__content___3PFJP"]')
-                    // .verify.containsText('//div[@class="style__content___3PFJP"]', seeMore[i])
-                    // .useCss()
-                    // .click('@logo')
-
-
-
-
-                    // },
-                    // //user jurney for mavic mini2
-                    // 'User journey': browser => {
-                    //     dji
-                    //         .useXpath()
-                    //         .waitForElementPresent('@mavicProducts')
-                    //         .click('@mavicProducts')
-                    //         .pause(1000)
-                    //         .click('(//a[@class="cc-close"])[1]')
-                    //         .waitForElementVisible('@djiMini2', 500)
-                    //         .pause(1000)
-                    //         .click('@djiMini2')
-                    //         .waitForElementVisible('@productContainer')
-                    //         .pause(1000)
-                    //         .click('@closePrivacyMessage')
-                    //         .click('@flyMoreCombo')
-                    //         .pause(1000)
-                    //         .click('@shopNow')
-                    //         //dialog message 
-                    //         .waitForElementVisible('@dialogMessege')
-                    //         .pause(1000)
-                    //         //continue Dialogbutton
-                    //         .click('@continueDialogButton')
-                    //         .waitForElementVisible('@carePage')
-                    //         //add one year 
-                    //         .click('@djiCareRefresh1year')
-                    //         //submite 
-                    //         .click('@AddDjiCareButton')
-                    //         //check user get messege add Successfully
-                    //         .waitForElementVisible("@comfirmationAddCart")
-                    //         .verify.containsText('@comfirmationAddCart', "Added to Cart Successfully!")
-                    //     dji
-                    //         .click('@viewCartCheckout')
-                    //         .pause(1000)
-                    //         .click('@checkOut')
-                    //         .waitForElementVisible("@loginBox")
-                    //         .click('@loginGuest')
-                    //         .waitForElementVisible("@orderSummary")
-                    //         .pause(1000)
-                    //         .setValue('@inputFirstName', userShippingData.firstName)
-                    //         .setValue('@inputLastName', userShippingData.lastName)
-                    //         .setValue('@inputAddress', userShippingData.address)
-                    //         .setValue('@inputAddress2', userShippingData.address2)
-                    //         .setValue('@inputCity', userShippingData.city)
-                    //         .setValue('@inputZipCode', userShippingData.zipCode)
-                    //         .setValue('@inputPhone', userShippingData.phone)
-                    //         .click('@selectStateWrapper')
-                    //         .pause(1000)
-                    //         .waitForElementVisible("@selectStateWisconsin")
-                    //         .pause(1000)
-                    //         .click('//div/ul//*[contains(text(),"Wisconsin")]')
-                    //         .pause(3000)
-                    //         .click('@buttonSubmitOrder')
-                    //         .pause(1000)
-                    //         .verify.containsText('@requiredCreditCard', "Required")
+    //user jurney for mavic mini2
+    'User journey to buy Dji Mini 2 - Drone': browser => {
+        dji
+            .useXpath()
+            .waitForElementPresent('//main[@class="_1SoeU"]')
+            .click('//i[@class="_3hG3b _3c0Qz"]')
+            .pause(1000)
+            .click('@closePrivacyMessage')
+        dji
+            .selectNewsDroneVersionAndCombo()
+            //dialog message 
+            .closeDialogMessage()
+            .addDjiaCareOneYear()
+            //check user get messege add Successfully
+            .waitForElementVisible("@comfirmationAddCart")
+            .verify.containsText('@comfirmationAddCart', "Added to Cart Successfully!")
+        dji
+            .checkOutCart()
+            .setShippingAddress(djiUserShippingData.firstName, djiUserShippingData.lastName,
+                djiUserShippingData.address, djiUserShippingData.address2,
+                djiUserShippingData.city, djiUserShippingData.zipCode, djiUserShippingData.phone, )
+            .verify.containsText('@requiredCreditCard', "Required")
+    }
+}
